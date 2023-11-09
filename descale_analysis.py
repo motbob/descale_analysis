@@ -98,7 +98,7 @@ def test_descale_error(clip, descale_settings):
     diff = core.std.PlaneStats(diff, prop='PS')
     return core.std.FrameEval(diff, functools.partial(get_calc, clip=diff, core=vs.core), prop_src=[diff])
 
-def get_descale_ranges(clip, txtfilename, kernels, ind_error_thr = 0.01, avg_error_thr = 0.006, exclude_ranges=None, use_old_rfs = False):
+def get_descale_ranges(clip, txtfilename, kernels, ind_error_thr = 0.01, avg_error_thr = 0.006, generate_txt_files=True):
     if not isinstance(txtfilename, str):
         raise TypeError("txtfilename must be a string")
     clipdown = core.resize.Bicubic(clip, 854, 480, format=vs.YUV420P8)
@@ -250,9 +250,10 @@ def get_descale_ranges(clip, txtfilename, kernels, ind_error_thr = 0.01, avg_err
             if diff_primary > ind_error_thr_temp:
                 defective[m] = 1
         frames += 1
-    for m in range(len(total_error)):
-        with open("string_" + txtfilename + f"_{kernel_appends[m]}.txt", "w") as x:
-            x.write(str(frame_ranges[m]))
-    with open(f"string_{txtfilename}_nokernel.txt", "w") as x:
-        x.write(str(nokernel_ranges))
+    if generate_txt_files == True:
+        for m in range(len(total_error)):
+            with open("string_" + txtfilename + f"_{kernel_appends[m]}.txt", "w") as x:
+                x.write(str(frame_ranges[m]))
+        with open(f"string_{txtfilename}_nokernel.txt", "w") as x:
+            x.write(str(nokernel_ranges))
     return frame_ranges
