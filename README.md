@@ -27,8 +27,8 @@ Note the `avg_error_thr` and `ind_error_thr` parameters in `get_descale_ranges`.
 You can use `test_descale_error` to determine good values for these thresholds:
 
 ```py
-kernel0 = dict(width=1280, height=720, fractional=719.8, kernel=Bicubic(0, 0.5))
-test = test_descale_error(jpn, kernel0)
+kernelres0 = dict(width=1280, height=720, fractional=719.8, kernel=Bicubic(0, 0.5))
+test = test_descale_error(jpn, kernelres0)
 test.set_output()
 ```
 
@@ -39,9 +39,9 @@ As the first code example indicates, you can feed the function a "fractional" nu
 You can use this tool to detect descalable scenes in single-kernel shows:
 
 ```py
-kernel = dict(width=1280, height=720, kernel=Bicubic(0, 0.5))
+kernelres = dict(width=1280, height=720, kernel=Bicubic(0, 0.5))
 
-ranges_list = get_descale_ranges(src, [kernel], "showtitle_epnum", avg_error_thr=0.015, ind_error_thr=0.02)
+ranges_list = get_descale_ranges(src, [kernelres], "showtitle_epnum", avg_error_thr=0.015, ind_error_thr=0.02)
 
 descalable_ranges = ranges_list[0]
 ```
