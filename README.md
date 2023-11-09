@@ -22,9 +22,9 @@ kernelres1_descalable_ranges = ranges_list[1]
 kernelres2_descalable_ranges = ranges_list[2]
 ```
 
-The tool will pick the descale kernel/res with the lowest error if multiple qualify.
-
 Note the `avg_error_thr` and `ind_error_thr` parameters in `get_descale_ranges`. Those are error thresholds that will reject a scene's descalability if they are exceeded. `avg_error_thr` is an error threshold for the scene, and `ind_error_thr` is an error threshold for each individual frame. The default values are *extremely* conservative and should be changed to fit the project.
+
+The tool will pick the descale kernel/res with the lowest error if more than one of them fall under the error thresholds.
 
 You can use `test_descale_error` to determine good values for these thresholds:
 
