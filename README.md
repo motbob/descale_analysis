@@ -1,4 +1,4 @@
-#descale-analysis
+# descale_analysis
 
 Prerequisites:
 
@@ -7,7 +7,9 @@ Prerequisites:
 
 This is a tool to determine which scenes in a show are descalable. If a show has multiple kernels, this tool makes it easy to choose how to descale each scene.
 
-```from descale_analysis import test_descale_error, get_descale_ranges
+```py
+from descale_analysis import test_descale_error, get_descale_ranges
+from vskernels import Bilinear, Bicubic, Lanczos
 
 kernel0 = dict(width=1280, height=720, kernel=Bicubic(0, 0.5))
 kernel1 = dict(width=1280, height=720, fractional=719.8, kernel=Bicubic(0, 1))
@@ -22,11 +24,13 @@ kernel_2_descalable_ranges = ranges_list[2]
 
 Note the `avg_error_thr` and `ind_error_thr` parameters in `get_descale_ranges`. Those are error thresholds that will reject a scene's descalability if they are exceeded. `avg_error_thr` is an error threshold for the scene, and `ind_error_thr` is an error threshold for each individual frame.
 
-You can use `test_descale_error` to determine good values for these thresholds.
+You can use `test_descale_error` to determine good values for these thresholds:
 
-```kernel0 = dict(width=1280, height=720, fractional=719.8, kernel=Bicubic(0, 0.5))
+```py
+kernel0 = dict(width=1280, height=720, fractional=719.8, kernel=Bicubic(0, 0.5))
 test = test_descale_error(jpn, kernel0)
-test.set_output()```
+test.set_output()
+```
 
 The error values will appear in the top left of the frame.
 
