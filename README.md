@@ -15,7 +15,7 @@ kernel0 = dict(width=1280, height=720, kernel=Bicubic(0, 0.5))
 kernel1 = dict(width=1280, height=720, fractional=719.8, kernel=Bicubic(0, 1))
 kernel2 = dict(width=1280, height=720, kernel=Bilinear(), src_top=0.2, src_height=719.6, src_left=0.2, src_width=1279.6)
 
-ranges_list = get_descale_ranges(src, "showtitle_epnum", [kernel0, kernel1, kernel2], avg_error_thr=0.015, ind_error_thr=0.02)
+ranges_list = get_descale_ranges(src, [kernel0, kernel1, kernel2], "showtitle_epnum", avg_error_thr=0.015, ind_error_thr=0.02)
 
 kernel_0_descalable_ranges = ranges_list[0]
 kernel_1_descalable_ranges = ranges_list[1]
@@ -41,7 +41,7 @@ You can use this tool to detect desclable scenes in single-kernel shows:
 ```py
 kernel = dict(width=1280, height=720, kernel=Bicubic(0, 0.5))
 
-ranges_list = get_descale_ranges(src, "showtitle_epnum", [kernel0], avg_error_thr=0.015, ind_error_thr=0.02)
+ranges_list = get_descale_ranges(src, [kernel], "showtitle_epnum", avg_error_thr=0.015, ind_error_thr=0.02)
 
 descalable_ranges = ranges_list[0]
 ```
