@@ -154,6 +154,7 @@ def get_descale_ranges(clip, kernels, txtfilename=None, ind_error_thr = 0.01, av
     clipdown = core.resize.Bicubic(clip, 854, 480, format=vs.YUV420P8)
     clipdown = core.wwxd.WWXD(clipdown)
     clip = core.resize.Point(clip, format=vs.GRAYS)
+    blur=False
     for kernel in kernels:
         descale_settings = process_descale_settings_dict(clip, kernel)
         if descale_settings["blur"]:
