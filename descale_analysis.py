@@ -4,6 +4,11 @@ import functools
 from vskernels import Kernel, Bicubic, Lanczos, Bilinear
 from mvsfunc import ShowAverage
 
+def instantiate_kernel(krnl):
+    if isinstance(krnl, type) and (krnl is Kernel or issubclass(krnl, Kernel)):
+        krnl = krnl()
+    return krnl
+
 def get_cropped_width_height(clip, src_height, src_width, base_height, base_width):
     from math import floor
     assert base_height >= src_height
@@ -55,7 +60,7 @@ def gen_descale_error_blur(clip: vs.VideoNode, kernelres, thr: float = 0.01, wri
     b = None
     c = None
     taps = None
-    kernel = kernelres["kernel"]
+    kernel = instantiate_kernel(kernelres["kernel"])
     width = kernelres["width"]
     height = kernelres["height"]
     blur = kernelres.get("blur", 1)
@@ -123,9 +128,9 @@ def process_descale_settings_dict(clip, descale_settings, res_only=False):
             descale_type = "manual"
     processed_dict = dict(width=width, height=height, src_height=src_height, src_width=src_width, src_top=src_top, src_left=src_left, descale_type=descale_type, blur=blur)
     if not res_only:
-        if not isinstance(descale_settings["kernel"], Kernel):
+        kernel = instantiate_kernel(descale_settings["kernel"])
+        if not isinstance(kernel, Kernel):
             raise Exception("'kernel' needs to be a vskernels kernel, e.g. vskernels.Bilinear() etc.")
-        kernel = descale_settings["kernel"]
         processed_dict["kernel"] = kernel
     return processed_dict
 
@@ -137,7 +142,7 @@ def test_descale_error(clip, descale_settings, thr=0.01):
     #and optionally EITHER src_ values or "fractional", a float.
     #src_ values are the descale versions. "fractional" is equivalent to getfnative output.
     descale_settings = process_descale_settings_dict(clip, descale_settings)
-    width, height, kernel, src_top, src_height, src_width, src_left = descale_settings["width"], descale_settings["height"], descale_settings["kernel"], descale_settings["src_top"], descale_settings["src_height"], descale_settings["src_width"], descale_settings["src_left"]
+    width, height, kernel, src_top, src_height, src_width, src_left = descale_settings["width"], descale_settings["height"], instantiate_kernel(descale_settings["kernel"]), descale_settings["src_top"], descale_settings["src_height"], descale_settings["src_width"], descale_settings["src_left"]
     def get_calc(n, f, clip, core):
         diff_raw = f.props['PSAverage']
         mask_value = f.props['MaskAverage']
@@ -179,7 +184,7 @@ def get_descale_ranges(clip, kernels, txtfilename=None, ind_error_thr = 0.01, av
         biases.append(bias)
         #ind_error_ker = kernel[8]
         #avg_error_ker = kernel[9]
-        descale_kernel = kernel["kernel"]
+        descale_kernel = instantiate_kernel(kernel["kernel"])
         kernel_args = descale_kernel.get_scale_args("asdf")
         if 'filter_param_a' in kernel_args and 'filter_param_b' in kernel_args:
             kernelappend = f"bicubic_{kernel_args['filter_param_a']}_{kernel_args['filter_param_b']}"

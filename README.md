@@ -3,7 +3,8 @@
 Prerequisites:
 
 - [vapoursynth](https://github.com/vapoursynth/vapoursynth)
-- [vs-kernels](https://github.com/Jaded-Encoding-Thaumaturgy/vs-kernels) (pip install vskernels)
+- [vs-kernels](https://github.com/Jaded-Encoding-Thaumaturgy/vs-kernels) (`pip install vskernels`)
+- [mvsfunc](https://github.com/HomeOfVapourSynthEvolution/mvsfunc) (`pip install git+https://github.com/HomeOfVapourSynthEvolution/mvsfunc`)
 
 This is a tool to determine which scenes in a show are descalable. If a show has multiple kernels, this tool makes it easy to choose how to descale each scene. The tool creates ranges that can be fed to jvsfunc.rfs:
 
