@@ -207,7 +207,7 @@ def get_descale_ranges(clip, kernels, txtfilename=None, ind_error_thr = 0.01, av
         elif descale_settings["descale_type"] == "fractional":
             kernelappend += f"_{kernel['fractional']}"
         else:
-            kernelappend += f"_{descale_settings['width']}_{descale_settings['height']}_{descale_settings['src_top']}_{descale_settings['src_height']}_{descale_settings['src_left']}_{descale_settings['src_width']}"
+            kernelappend += f"_{descale_settings['width']}_{descale_settings['height']}_{round(descale_settings['src_top'], 2)}_{round(descale_settings['src_height'], 2)}_{round(descale_settings['src_left'], 2)}_{round(descale_settings['src_width'], 2)}"
         kernel_appends.append(kernelappend)
         if blur:
             print("shouldn't be seeing this message unless you're doing blur")
