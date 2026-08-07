@@ -124,7 +124,7 @@ def test_descale_error(clip, descale_settings, thr=0.01, clamp=True):
     diff = core.std.PlaneStats(diff, prop='PS')
     return core.std.FrameEval(diff, functools.partial(get_calc, clip=diff, core=vs.core), prop_src=[diff])
 
-def get_descale_ranges(clip, kernels, txtfilename=None, ind_error_thr = 0.01, avg_error_thr = 0.006, thr = 0.01, dfttest=False):
+def get_descale_ranges(clip, kernels, txtfilename, ind_error_thr = 0.01, avg_error_thr = 0.006, thr = 0.01, dfttest=False):
     if isinstance(kernels, dict):
         kernels = [kernels]
     clipdown = core.resize.Bicubic(clip, 854, 480, format=vs.YUV420P8)

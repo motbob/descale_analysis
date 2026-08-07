@@ -6,7 +6,7 @@ Prerequisites:
 - [vs-kernels](https://github.com/Jaded-Encoding-Thaumaturgy/vs-kernels) (`pip install vskernels`)
 - [mvsfunc](https://github.com/HomeOfVapourSynthEvolution/mvsfunc) (`pip install git+https://github.com/HomeOfVapourSynthEvolution/mvsfunc`)
 
-This is a tool to determine which scenes in a show are descalable. If a show has multiple kernels, this tool makes it easy to choose how to descale each scene. The tool creates ranges that can be fed to jvsfunc.rfs:
+This is a tool to determine which scenes in a show are descalable. If a show has multiple kernels, this tool makes it easy to choose how to descale each scene. The tool creates ranges that can be fed to vstools.replace_ranges:
 
 ```py
 from descale_analysis import test_descale_error, get_descale_ranges
@@ -22,6 +22,8 @@ kernelres0_descalable_ranges = ranges_list[0]
 kernelres1_descalable_ranges = ranges_list[1]
 kernelres2_descalable_ranges = ranges_list[2]
 ```
+
+The ranges will also get written to text files so that you don't have to run the analysis again if the encode aborts for whatever reason. The names of the text files are determined by `txtfilename`. If you don't want to write to text files, you can set `txtfilename=None`.
 
 Note the `avg_error_thr` and `ind_error_thr` parameters in `get_descale_ranges`. Those are error thresholds that will reject a scene's descalability if they are exceeded. `avg_error_thr` is an error threshold for the scene, and `ind_error_thr` is an error threshold for each individual frame. The default values are *extremely* conservative and should be changed to fit the project.
 
