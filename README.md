@@ -52,3 +52,29 @@ ranges_list = get_descale_ranges(src, [kernelres], "showtitle_epnum", avg_error_
 
 descalable_ranges = ranges_list[0]
 ```
+
+### The "fake kernel" method of scene checking
+
+Sometimes, you will be faced with a show where error thresholds don't work all that well. For example, there may be a show where, due to clipping or compression artifacts, many scenes have high error but still benefit from a descale.
+
+In cases like that, you may want to set a high error threshold and use a fake kernel in order to exclude scenes that do not appear to be descalable.
+
+Suppose you have a show that appears to be 1280x720 bilinear. You can run the following code:
+
+```py
+kernel0 = dict(width=1280, height=720, kernel=Bilinear())
+kernel1 = dict(width=1344, height=756, kernel=Bilinear())#fake kernel
+
+get_descale_ranges(src, [kernel0, kernel1], "showtitle_epnum", avg_error_thr=0.03, ind_error_thr=0.05)
+```
+
+Because of the way descale_analysis calculates error (MSE), if a scene has lower error for kernel1 than kernel0, then it's unlikely that that scene is actually 720p bilinear, even if its error is low on an absolute basis. The above code will prevent those kinds of scenes from being included in the kernel0 ranges.
+
+If you use this method, you will usually find that very blurry scenes are placed in the fake kernel ranges (since the information in the image is dominated by random noise at that point). Most people edgemask their rescales anyway, and so this is normally no great loss.
+
+### Various other tools for checking descales
+
+There are various other functions that allow you to get more information about descales. For example:
+
+`checkboth`: input a single frame and res information (e.g. `dict(width=width, height=integer)`; supports fractional and raw src_ values), output a set of error maps that are labels in the top left.
+`checkbothextended`: same as above except that it returns more error maps.

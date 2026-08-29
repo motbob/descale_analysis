@@ -325,7 +325,7 @@ def checkbothextended(frame, res):
     blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(5), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(5)")
     return blank_clip[1:]
 
-def manual_check(frame, res_info, kernels):
+def manual_check(frame, res_info, kernels, downscale = False):
     res_info = process_descale_settings_dict(frame, res_info, res_only=True)
     scale_args = res_info["scale_args"]
     descale = kernels[0].descale(frame, width=res_info["width"], height=res_info["height"], src_left=res_info["src_left"], src_width=res_info["src_width"], src_top=res_info["src_top"], src_height=res_info["src_height"], **scale_args)
@@ -335,7 +335,8 @@ def manual_check(frame, res_info, kernels):
     fullres_srcheight = res_info["src_height"] * frame.height / res_info["height"]
     fullres_srcleft = res_info["src_left"] * -1 * frame.width / res_info["width"]
     fullres_srcwidth = res_info["src_width"] * frame.width / res_info["width"]
-    descale += core.resize.Bicubic(frame, res_info["width"], res_info["height"], src_left=fullres_srcleft, src_width=fullres_srcwidth, src_top=fullres_srctop, src_height=fullres_srcheight)
+    if downscale:
+        descale += core.resize.Bicubic(frame, res_info["width"], res_info["height"], src_left=fullres_srcleft, src_width=fullres_srcwidth, src_top=fullres_srctop, src_height=fullres_srcheight)
     return descale[1:]
 
 def search_for_height(frame, kernel, src_top_start, src_height, height, src_top_step = 0.025):
