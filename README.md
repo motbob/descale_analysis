@@ -76,5 +76,5 @@ If you use this method, you will usually find that very blurry scenes are placed
 
 There are various other functions that allow you to get more information about descales. For example:
 
-`checkboth`: input a single frame and res information (e.g. `dict(width=width, height=integer)`; supports fractional and raw src_ values), output a set of error maps that are labels in the top left.
+`checkboth`: input a single frame and res information (e.g. `dict(width=width, height=integer)`; supports fractional and raw src_ values), output a set of error maps that are labels in the top left.  
 `checkbothextended`: same as above except that it returns more error maps.
