@@ -77,10 +77,6 @@ def process_descale_settings_dict(clip, descale_settings, res_only=False):
         if "src_height" in descale_settings or "src_width" in descale_settings or "src_left" in descale_settings or "src_top" in descale_settings:
             raise Exception("You can't set both fractional and src_ values")
         cropping_args = descale_cropping_args(clip, src_height=descale_settings["fractional"], base_height=height, base_width=width)
-        while cropping_args["src_height"] + 1 < height:
-            height = height - 2
-        while cropping_args["src_width"] + 1 < width:
-            width = width - 2
         src_height, src_width, src_top, src_left = cropping_args["src_height"], cropping_args["src_width"], cropping_args["src_top"], cropping_args["src_left"]
     else:
         src_height = descale_settings.get("src_height", descale_settings["height"])
@@ -294,19 +290,21 @@ def get_descale_ranges(clip, kernels, txtfilename, ind_error_thr = 0.01, avg_err
 def checkboth(frame, res):
     res_info = process_descale_settings_dict(frame, res, res_only=True)
     blank_clip = core.std.BlankClip(frame, height = frame.height - 20, width = frame.width - 20)
-    for i in range(0,4):
+    for i in range(0,1):
         for j in range(0,7):
             b = i
             c = j
             b = b * 0.16666
             c = c * 0.16666
             a = gen_descale_error(frame, res_info["width"], res_info["height"], Bicubic(b, c), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
+            a = core.text.Text(a, f"\nBicubic ({round(b, 2)}, {round(c, 2)})")
             blank_clip += a
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Bilinear(), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(2), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(3), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(4), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(5), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Bicubic(0.3333, 0.3333), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nBicubic ({round(0.3333, 2)}, {round(0.3333, 2)})")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Bilinear(), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nBilinear")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(2), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(2)")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(3), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(3)")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(4), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(4)")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(5), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(5)")
     return blank_clip[1:]
 
 def checkbothextended(frame, res):
@@ -318,26 +316,13 @@ def checkbothextended(frame, res):
             c = j
             b = b * 1/6
             c = c * 0.05
-            a = gen_descale_error(frame, res_info["width"], res_info["height"], Bicubic(b, c), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
+            a = gen_descale_error(frame, res_info["width"], res_info["height"], Bicubic(b, c), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nBicubic ({round(b, 2)}, {round(c, 2)})")
             blank_clip += a
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Bilinear(), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(2), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(3), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(4), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(5), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-    return blank_clip[1:]
-
-def checkboth_neg(frame, res):
-    res_info = process_descale_settings_dict(frame, res, res_only=True)
-    blank_clip = core.std.BlankClip(frame, height = frame.height - 20, width = frame.width - 20)
-    for i in range(1,7):
-        for j in range(0,7):
-            b = -i
-            c = j
-            b = b * 0.16666
-            c = c * 0.16666
-            a = gen_descale_error(frame, res_info["width"], res_info["height"], Bicubic(b, c), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"])
-            blank_clip += a
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Bilinear(), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nBilinear")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(2), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(2)")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(3), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(3)")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(4), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(4)")
+    blank_clip += gen_descale_error(frame, res_info["width"], res_info["height"], Lanczos(5), res_info["src_height"], res_info["src_top"], res_info["src_width"], res_info["src_left"], write_error=True, scale_args=res_info["scale_args"]).text.Text(f"\nLanczos(5)")
     return blank_clip[1:]
 
 def manual_check(frame, res_info, kernels):
@@ -354,16 +339,16 @@ def manual_check(frame, res_info, kernels):
     return descale[1:]
 
 def search_for_height(frame, kernel, src_top_start, src_height, height, src_top_step = 0.025):
-    clip = gen_descale_error(frame, width=frame.width, height=height, src_height=src_height, src_top = src_top_start, src_left=0, src_width=frame.width, kernel=kernel)
-    for thing in range(1, 40):
-        clip += gen_descale_error(frame, width=frame.width, height=height, src_height=src_height, src_top = src_top_start - src_top_step * thing, src_left=0, src_width=frame.width, kernel=kernel)
+    clip = gen_descale_error(frame, width=frame.width, height=height, src_height=src_height, src_top = src_top_start, src_left=0, src_width=frame.width, kernel=kernel).text.Text(f"\nsrc_top = {round(src_top_start, 3)}")
+    for thing in range(1, 41):
+        clip += gen_descale_error(frame, width=frame.width, height=height, src_height=src_height, src_top = src_top_start - src_top_step * thing, src_left=0, src_width=frame.width, kernel=kernel).text.Text(f"\nsrc_top = {round(src_top_start - src_top_step * thing, 3)}")
     return ShowAverage(clip)
 
 def search_for_width(frame, kernel, src_left_start, src_width, width, src_left_step = 0.025):
     
-    clip = gen_descale_error(frame, width=width, height=frame.height, src_height=frame.height, src_top = 0, src_left=src_left_start, src_width=src_width, kernel=kernel)
-    for thing in range(1, 40):
-        clip += gen_descale_error(frame, width=width, height=frame.height, src_height=frame.height, src_top = 0, src_left=src_left_start - src_left_step * thing, src_width=src_width, kernel=kernel)
+    clip = gen_descale_error(frame, width=width, height=frame.height, src_height=frame.height, src_top = 0, src_left=src_left_start, src_width=src_width, kernel=kernel).text.Text(f"\nsrc_left = {round(src_left_start, 3)}")
+    for thing in range(1, 41):
+        clip += gen_descale_error(frame, width=width, height=frame.height, src_height=frame.height, src_top = 0, src_left=src_left_start - src_left_step * thing, src_width=src_width, kernel=kernel).text.Text(f"\nsrc_left = {round(src_left_start - src_left_step * thing, 3)}")
     return ShowAverage(clip)
 
 def test_sigmoid_slopes(frame, kernel, res, center = 0.5):
