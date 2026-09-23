@@ -5,6 +5,7 @@ Prerequisites:
 - [vapoursynth](https://github.com/vapoursynth/vapoursynth)
 - [vs-jetpack](https://github.com/Jaded-Encoding-Thaumaturgy/vs-jetpack)
 - [mvsfunc](https://github.com/HomeOfVapourSynthEvolution/mvsfunc)
+- [vapoursynth-scxvid](https://github.com/dubhatervapoursynth/vapoursynth-scxvid)
 
 This is a tool to determine which scenes in a show are descalable. If a show has multiple kernels, this tool makes it easy to choose how to descale each scene. The tool creates ranges that can be fed to vstools.replace_ranges:
 
